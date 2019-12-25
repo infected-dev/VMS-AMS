@@ -6,9 +6,12 @@ from datetime import datetime
 
 agencyapp = Blueprint('agencyapp', __name__)
 
+
+
 @agencyapp.route('/agency')
 def agency_main():
-    log = AgencyLog.query.all()
+    date = datetime.now().date()
+    log = AgencyLog.query.filter_by(date=date).all()
     supervisors = Supervisor.query.all()
     worktypes = WorkType.query.all()
     agencies = AgencyMast.query.all()
@@ -16,6 +19,8 @@ def agency_main():
     return render_template('agency.html', log=log, supervisors=supervisors,
                             worktypes=worktypes, agencies=agencies, 
                             locations=locations)
+
+
 
 @agencyapp.route('/addagency', methods=['POST'])
 def add_log():
@@ -93,6 +98,8 @@ def add_log():
         db.session.commit()
         return redirect(url_for('agencyapp.agency_main'))
 
+
+
 @agencyapp.route('/updateAgency', methods=['POST'])
 def update_agency():
     if request.form:
@@ -110,6 +117,7 @@ def update_agency():
         return {'status': 'Success'}
 
 
+
 @agencyapp.route('/reportAgency', methods=['GET','POST'])
 def report_agency():
     log = AgencyLog.query.all()
@@ -117,8 +125,11 @@ def report_agency():
     return render_template('report-agency.html', log=log,
                             locations=locations)
 
+
+
 @agencyapp.route('/printAgencyReport', methods=['POST'])
 def print_agency_report():
+
     if request.form:
         printid = int(request.form.get('printid'))
         date =  datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
@@ -140,11 +151,35 @@ def print_agency_report():
             if check:
                 title = 'Agency Records Sorted by Location'
                 logs = AgencyLog.query.filter_by(date=date).all()
-                count = len(logs)
-                extras = 0
-                for i in logs:
-                    if i.manpower:
-                        a = i.manpower
-                        extras+=a
-                return render_template('agency-report-print.html', logs=logs, title=title,
-                                        date=date, count=count, extras=extras)
+            else:
+                title = 'Agency Report of By Location'
+                logs = AgencyLog.query.filter(AgencyLog.date==date, AgencyLog.location_id==loc).all()
+
+            count = len(logs)
+            extras = 0
+            for i in logs:
+                if i.manpower:
+                    a = i.manpower
+                    extras+=a
+            return render_template('agency-report-print.html', logs=logs, title=title,
+                                    date=date, count=count, extras=extras)
+
+@agencyapp.route('/freqAgency')
+def freq_visitor():
+
+    agency_all = AgencyMast.query.all()
+    log = []
+    for i in agency_all:
+        a = len(i.log)
+        log.append([i.agency_name,a])
+    return render_template('report-agency-freq.html', log=log) 
+
+@agencyapp.route('/LocationAgency')
+def loc_agency():
+    location_all = Location.query.all()
+
+    if request.form:
+        loc_id = int(request.form.get('loc'))
+        loc = Location.query.get(loc_id)
+        logs = loc.log
+        return render_template('')

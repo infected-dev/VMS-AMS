@@ -58,6 +58,7 @@
                                     <strong class="ml-2">Total:<span class="ml-1">{{count+extras}}  </span></strong>
                             </div>
                         </div>
+
                         <div id='tableclass' class="m">
                             <table class="mb-4 table table-sm table-bordered">
                                 <thead >
@@ -113,74 +114,6 @@
                         </div>
                         {% endif %}
 
-            {% if title == 'Visitors Records by Department' %}
-            <div class="mr-2 mb-2 row">
-                <div class="text-right ml-4">
-                       <strong> Date: {{date.strftime('%d/%m/%Y')}}</strong>
-               </div>
-               <div class="col text-right">
-                      <strong >Visitor Count:<span class="ml-1">{{count}}
-                       </strong>
-                       
-               </div>
-           </div>
-                        <div id='tableclass' class="">
-                            <table class="table table-sm table-bordered">
-                                <thead >
-                                    <tr class="text-center">
-                                        <th>#</th>
-                                        <th>Visitor Name</th>
-                                        
-                                        <th>Contact No</th>
-                                        <th>Company/From</th>
-                                        <th>Visiting Employee</th>
-                                        <th>Visiting Purpose</th>
-                                        <th>In Time</th>
-                                        <th> Out Time </th>
-                                        <th>Total Duration </th>
-                                    </tr>
-                                </thead>
-                                
-                                <tbody>
-                                    {% for vi in filtered_list %}
-                                     <tr>
-                                            <td></td>
-                                            {% if vi.extras  %}
-                                            <td>{{vi.a_timelog.name.title()}}+{{vi.extras}}</td>
-                                                
-                                            {% else %}
-                                            <td>{{vi.a_timelog.name.title()}}</td>
-                                            {% endif %}
-                                            <td>{{vi.a_timelog.contact}}</td>
-                                            <td>{{vi.a_timelog.place_from.title()}}</td>
-                                            {% if vi.active.visited_employee     == None %}
-                                            <td>None</td>
-                                            {% else %}
-                                            <td> {{vi.active.visited_employee.employee_name.title()}} </td>
-                                            {% endif %}
-
-                                            <td> {{vi.active.visiting_purpose.title()}}</td>
-
-
-                                            {% if vi.in_time == None %}
-                                            <td></td>
-                                            {% else %}
-                                            <td>{{vi.in_time.strftime('%H:%M')}}</td>
-                                            {% endif %}
-
-
-                                            {% if vi.out_time == None %}
-                                            <td></td>
-                                            {% else %}
-                                            <td>{{vi.out_time.strftime('%H:%M')}}</td>
-                                            {% endif %}
-                                            <td>{{vi.duration}}</td>
-                                    </tr>
-                                    {% endfor %}    
-                                </tbody>
-                            </table>
-                        </div>
-                        {% endif %}
 
                         {% if title == 'Agency Records Sorted by Location' %}
                         <div class="mr-2 mb-2 row">
@@ -188,10 +121,13 @@
                                     <strong> Date: {{date.strftime('%d/%m/%Y')}}</strong>
                             </div>
                             <div class="col text-right">
-                                   <strong >Total Count:<span class="ml-2">{{count}}
-                                    </strong>
+                                <strong >Agency Count:<span class="ml-1">{{count}}
+                                </strong>
+                                <strong class="ml-2">Extras:<span class="ml-1">{{extras}}</span></strong>
+                                <strong class="ml-2">Total:<span class="ml-1">{{count+extras}}  </span></strong>
                             </div>
                         </div>
+
                         <div id='tableclass' class="m">
                             <table class="mb-4 table table-sm table-bordered">
                                 <thead >
@@ -248,85 +184,76 @@
                         </div>
                         {% endif %}
 
-
-                        {% if title == 'Visitor Records Sorted by Department' %}
+                        {% if title == 'Agency Records Sorted by Location' %}
                         <div class="mr-2 mb-2 row">
                              <div class="text-right ml-4">
                                     <strong> Date: {{date.strftime('%d/%m/%Y')}}</strong>
                             </div>
                             <div class="col text-right">
-                                   <strong >Total Count:<span class="ml-2">{{count}}
-                                    </strong>
+                                <strong >Agency Count:<span class="ml-1">{{count}}
+                                </strong>
+                                <strong class="ml-2">Extras:<span class="ml-1">{{extras}}</span></strong>
+                                <strong class="ml-2">Total:<span class="ml-1">{{count+extras}}  </span></strong>
                             </div>
                         </div>
+
                         <div id='tableclass' class="m">
                             <table class="mb-4 table table-sm table-bordered">
                                 <thead >
                                     <tr class="text-center">
                                         <th>#</th>
-                                        <th>Visitor Name</th>
+                                        <th>Order No</th>
+                                        <th>Agency Name</th>
                                         
-                                        <th>Contact No</th>
-                                        <th>Company/From</th>
-                                        <th>Visiting Employee</th>
-                                        <th>Visiting Department</th>
-                                        <th>Visiting Purpose</th>
+                                        <th>Work Type</th>
+                                        <th>Head</th>
+                                        <th>Extras</th>
                                         <th>In Time</th>
-                                        <th> Out Time </th>
-                                        <th>Total Duration </th>
+                                        <th>Out Time</th>
+                                        <th>Duration</th>
+                                        <th>Supervisor</th>
+                                        <th>Location</th>
+                                        <th>Vehicle</th>
+                                        <th>Remarks</th>
                                     </tr>
                                 </thead>
                                 
                                 <tbody>
-                                    {% for vi in query | sort(attribute='active.visited_dept.department_name') %}
-                                       
+                                    {% for q in logs | sort(attribute='locationm.location_name') %}
                                      <tr>
-                                           
                                             <td></td>
-                                            {% if vi.extras  %}
-                                            <td>{{vi.a_timelog.name.title()}}+{{vi.extras}}</td>
-                                                
+                                            <td>{{q.order}}</td>
+                                            <td>{{q.agenm.agency_name}}</td>
+                                            <td>{{q.wtyp.work_type}}</td>
+                                            <td>{{q.contact_person}}</td>
+                                            <td>{{q.manpower}}</td>
+
+                                            {% if q.in_time %}
+                                            <td>{{q.in_time.strftime('%H:%M')}}</td>
                                             {% else %}
-                                            <td>{{vi.a_timelog.name.title()}}</td>
-                                            {% endif %}
-                                            <td>{{vi.a_timelog.contact}}</td>
-                                            <td>{{vi.a_timelog.place_from.title()}}</td>
-                                            {% if vi.active.visited_employee     == None %}
-                                            <td>None</td>
-                                            {% else %}
-                                            <td> {{vi.active.visited_employee.employee_name.title()}} </td>
-                                            {% endif %}
-
-
-                                            {% if vi.a_timelog.visiting_department == None   %}
-                                            <td>None</td>
-                                            {% else %}
-                                            <td>{{vi.active.visited_dept.department_name.title()}}</td>
-                                            {% endif %}
-
-
-                                            <td> {{vi.active.visiting_purpose.title()}}</td>
-                                            {% if vi.in_time == None %}
                                             <td></td>
-                                            {% else %}
-                                            <td>{{vi.in_time.strftime('%H:%M')}}</td>
                                             {% endif %}
 
-
-                                            {% if vi.out_time == None %}
+                                            {% if q.out_time %}
+                                            <td>{{q.out_time.strftime('%H:%M')}}</td>
+                                            {% else %}
                                             <td></td>
-                                            {% else %}
-                                            <td>{{vi.out_time.strftime('%H:%M')}}</td>
                                             {% endif %}
 
-
-                                            <td>{{vi.duration}}</td>
+                                            <td>{{q.duration}}</td>
+                                            <td>{{q.superm.supervisor_name}}</td>
+                                            <td>{{q.locationm.location_name}}</td>
+                                            <td>{{q.vehicle_no}}</td>
+                                            <td>{{q.remarks}}</td>
                                     </tr>
                                     {% endfor %}    
+                                      
                                 </tbody>
                             </table>
                         </div>
                         {% endif %}
+                        
+                        
                     </div>
         </div>
         <script src="{{url_for('static', filename='js/jquery-3.4.js')}}"></script>

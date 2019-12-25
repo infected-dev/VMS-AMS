@@ -14,13 +14,13 @@
 
 {% block body %}
 <div class="row">
-    <div class="col col-md-2">
+    <div class="col">
             <div class="card">
                     <h5 class="card-header text-center">Print</h5>
-                        <div class="btn-group-vertical p-2">
-                            <button type="button" data-toggle="modal" data-target="#datewisemodal"  class="btn btn-secondary mb-2 rounded-bottom "> Date Wise Report</button>
-                            <button data-toggle="modal" data-target="#departmentwisemodal" class="btn btn-secondary rounded "> Location Wise Report</button>
-                            <button data-toggle="modal" data-target="#personwisemodal" class="btn btn-secondary mt-2 rounded "> Agency Wise Report</button>
+                        <div class="btn-group" role="group">
+                            <button type="button" data-toggle="modal" data-target="#datewisemodal"  class="btn btn-secondary m-3 rounded"> Date Wise Report</button>
+                            <button type="button" data-toggle="modal" data-target="#departmentwisemodal" class="btn btn-secondary rounded m-3 "> Location Wise Report</button>
+                            <button type="button" data-toggle="modal" data-target="#personwisemodal" class="btn btn-secondary m-3 rounded"> Agency Wise Report</button>
                         </div>
                     </div>
     </div>
@@ -47,6 +47,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="modal fade" id="departmentwisemodal" tabindex="-1" role="dialog" aria-labelledby="departmentwise" aria-hidden="true">
             <div class="modal-dialog" role="form">  
@@ -80,6 +81,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="modal fade" id="personwisemodal" tabindex="-1" role="dialog" aria-labelledby="personwisemodal" aria-hidden="true">
                 <div class="modal-dialog" role="form">
