@@ -35,13 +35,21 @@
                     </div>
                     <div class="modal-body">
                             <form class="form-row" action="{{url_for('report.report_print')}}" method="POST">
-                            <input type="hidden" name="printid" value="1">
-                            <label class=" mb-2 h6 col-form-label" for="#date">Select Date : </label>
-                            <input id="date" type="date" class="form-control" name="date" autofocus>
-                            
-                            <input type="submit"  class="mt-2 btn btn-primary btn-block btn-sm" value="Print">
+                                <input type="hidden" name="printid" value="1">
+                                <label class=" mb-2 h6 col-form-label" for="#date">Select Date : </label>
+                                <input id="date" type="date" class="form-control" name="date" autofocus>
+                                <input type="submit"  class="mt-2 btn btn-primary btn-block btn-sm" value="Print">
                               
                         </form>
+
+                        <form class="form-row mt-2" action="{{url_for('report.report_print')}}" method="POST">
+                            <input type="hidden" name="printid" value="13">
+                            <label class=" mb-2 h6 col-form-label" for="#date1">Select Date : </label>
+                            <input id="date1" type="date" class="form-control col mr-2 " name="date" > 
+                            <input id="date2" type="date" class="form-control col" name="date2" >
+                            <input type="submit"  class="mt-2 btn btn-primary btn-block btn-sm" value="Print">
+                          
+                    </form>
                         
                     </div>
                 </div>

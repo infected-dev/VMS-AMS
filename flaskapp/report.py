@@ -182,6 +182,20 @@ def report_print():
                 count = len(filtered_list)
                 return render_template('report-visitors-print.html',department=department, title=title, count=count, 
                     filtered_list=filtered_list, date=date)
+        elif print_id=='13':
+             title = 'Consolidated Visitor Report'
+             date_2 = datetime.strptime(
+                request.form.get('date2'), '%Y-%m-%d').date()
+             query = Timesheet_Visitor.query.filter(Timesheet_Visitor.date.between(date, date_2))
+             count = Timesheet_Visitor.query.filter(Timesheet_Visitor.date.between(date, date_2)).count()
+             count_extra = 0
+             for i in query:
+                 if i.extras:
+                     count_extra += i.extras
+             return render_template('report-visitors-print.html', title=title, count=count, count_extra=count_extra, 
+                                    date=date, date_2=date_2, query=query)
+
+
 
 
 @report.route('/print-slip', methods=['POST'])
