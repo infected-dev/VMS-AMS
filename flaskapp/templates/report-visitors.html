@@ -41,13 +41,18 @@
                                 <input type="submit"  class="mt-2 btn btn-primary btn-block btn-sm" value="Print">
                               
                         </form>
+                      
+                        <form class="mt-2" action="{{url_for('report.report_print')}}" method="POST">
 
-                        <form class="form-row mt-2" action="{{url_for('report.report_print')}}" method="POST">
-                            <input type="hidden" name="printid" value="13">
+                            <p><strong>Consolidated Report</strong></p>
+                            <div class="form-row">
+                                <input type="hidden" name="printid" value="13">
                             <label class=" mb-2 h6 col-form-label" for="#date1">Select Date : </label>
                             <input id="date1" type="date" class="form-control col mr-2 " name="date" > 
                             <input id="date2" type="date" class="form-control col" name="date2" >
                             <input type="submit"  class="mt-2 btn btn-primary btn-block btn-sm" value="Print">
+                            </div>
+                            
                           
                     </form>
                         

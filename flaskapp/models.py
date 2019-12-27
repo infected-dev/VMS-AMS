@@ -102,9 +102,46 @@ class WorkType(db.Model):
 
     def del_wtype(id):
         wtyp = WorkType.get(id)
-        db.session.delete(wtyp)
+        db.session.delete(wtyp) 
         db.session.commit()
-    
+
+class ToolMast(db.Model):
+    __bind_key__ = 'agency'
+    __tablename__ = 'toolmast'
+
+    tool_id = db.Column(db.Integer, primary_key=True)
+    tool_name = db.Column(db.String(30), unique=True)
+    logs = db.relationship('Tool_log', backref='tool', lazy=True)
+
+    def __init__(self, tool_name):
+        self.tool_name = tool_name
+
+    def checktool_add(tool_name):
+        var = ToolMast.query.filter_by(tool_name=tool_name).first()
+        if var:
+            return {'status':'already exists'}
+        else:
+            var = ToolMast(tool_name=tool_name)
+            db.session.add(var)
+            db.session.commit()
+            return {'status':'ok'}
+
+
+    def addtool(self, agency_id):
+        toolog = Tool_log(tool_id=self.tool_id, agency_log=agency_id)
+        db.session.add(toolog)
+        db.session.commit()
+
+
+class Tool_log(db.Model):
+    __bind_key__ = 'agency'
+    __tablename__ = 'tool_log'
+
+    toolog_id = db.Column(db.Integer, primary_key=True)
+    tool_id = db.Column(db.Integer, db.ForeignKey('toolmast.tool_id'))
+    agency_log = db.Column(db.Integer, db.ForeignKey('agencylog.al_id'))
+
+
 
 class AgencyLog(db.Model):
     __bind_key__ = 'agency'
@@ -124,6 +161,7 @@ class AgencyLog(db.Model):
     remarks = db.Column(db.Integer)
     Supervisor_id = db.Column(db.Integer, db.ForeignKey('supervisor.sid'))
     location_id = db.Column(db.Integer, db.ForeignKey('location.lid'))
+    tools = db.relationship('Tool_log', backref='tools', lazy=True)
 
     def __init__(self, order, agency_id, worktype_id, contact_person, manpower, date, in_time, vehicle_no, remarks, Supervisor_id, location_id):
         self.order = order
