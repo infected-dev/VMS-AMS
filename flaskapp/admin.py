@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect, flash, session
-from .models import Visitor, Department, Employee, Vehicle, VehicleTypes, User, CompanyVehicle
+from .models import Visitor, Department, Employee, Vehicle, VehicleTypes, User, CompanyVehicle, AgencyMast, Location, Supervisor, WorkType
 from flask_login import login_required
 from . import db
 
@@ -17,9 +17,14 @@ def admin_main():
     users = User.query.all()
     company_vehicles = CompanyVehicle.query.all()
     visitors = Visitor.query.all()
+    agencys = AgencyMast.query.all()
+    locations = Location.query.all()
+    supervisors = Supervisor.query.all()
+    worktypes = WorkType.query.all()
     return render_template('admin.html',visitors=visitors,
         company_vehicles=company_vehicles, vehicle_types=vehicle_types, 
-        departments=departments, employees=employees, users=users)
+        departments=departments, employees=employees, users=users, agencys=agencys, 
+        locations=locations, worktypes=worktypes, supervisors=supervisors)
 
 
 
@@ -131,5 +136,54 @@ def admin_user():
         username = request.form.get('username')
         user = User(username=username)
         db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('admin.admin_main'))
+
+@admin.route('/admin/post/agency', methods=['POST'])
+def admin_agency():
+    if request.form:
+        function = request.form['f_id']
+        if function:
+            function = int(function)
+            if function == 1:
+                a_id = int(request.form['a_id'])
+                a_name = request.form['a_name']
+                agency = AgencyMast.query.get(a_id)
+                agency.agency_name = a_name
+                db.session.commit()
+                return {'status':'done'}
+        else:        
+            name = request.form.get('agency_name')
+            agency = AgencyMast(agency_name=name)
+            db.session.add(agency)
+            db.session.commit()
+            return redirect(url_for('admin.admin_main'))
+
+@admin.route('/admin/post/location', methods=['POST'])
+def admin_location():
+    if request.form:
+        name = request.form.get('location_name')
+        location = Location(location_name=name)
+        db.session.add(location)
+        db.session.commit()
+        return redirect(url_for('admin.admin_main'))
+
+@admin.route('/admin/post/supervisor', methods=['POST'])
+def admin_supervisor():
+    if request.form:
+        name = request.form.get('supervisor_name')
+        supervisor = Supervisor(supervisor_name=name)
+        db.session.add(supervisor)
+        db.session.commit()
+        return redirect(url_for('admin.admin_main'))
+
+
+@admin.route('/admin/post/worktype', methods=['POST'])
+def admin_worktype():
+    if request.form:
+        
+        name = request.form.get('work_type')
+        worktype = WorkType(work_type=name)
+        db.session.add(worktype)
         db.session.commit()
         return redirect(url_for('admin.admin_main'))

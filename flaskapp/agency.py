@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, request, url_for, render_template
-from .models import AgencyLog, AgencyMast, Location, Supervisor, WorkType, ToolMast, Tool_log
+from .models import AgencyLog, AgencyMast, Location, Supervisor, WorkType, ToolLog
 from . import db    
 from .cust_functions import *
 from datetime import datetime
@@ -11,6 +11,7 @@ agencyapp = Blueprint('agencyapp', __name__)
 @agencyapp.route('/agency')
 def agency_main():
     date = datetime.now().date()
+    time = (datetime.now().time()).strftime("%H:%M")
     log = AgencyLog.query.filter_by(date=date).all()
     supervisors = Supervisor.query.all()
     worktypes = WorkType.query.all()
@@ -18,7 +19,7 @@ def agency_main():
     locations = Location.query.all()
     return render_template('agency.html', log=log, supervisors=supervisors,
                             worktypes=worktypes, agencies=agencies, 
-                            locations=locations)
+                            locations=locations, date=date, time=time)
 
 
 
@@ -99,22 +100,7 @@ def add_log():
         return redirect(url_for('agencyapp.agency_main'))
 
 
-@agencyapp.route('/ManageTools', methods=['GET', 'POST'])
-def agency_tools():
-    log = ''
-    if request.form:
-        date = datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
-        print(date)
-        log = AgencyLog.query.filter_by(date=date).all()
-        print(log)
-        tools = ToolMast.query.all()
-        return render_template('agency-tools.html', log=log, tools=tools)   
-    return render_template('agency-tools.html', log=log)
 
-@agencyapp.route('/UpdateTools', methods=['POST'])
-def update_tools():
-    al_id = request.form['log_id']
-    tool_text = request.form['tool_text']
     
 
 
@@ -141,6 +127,12 @@ def report_agency():
     log = AgencyLog.query.all()
     locations = Location.query.all()
     agency_mast = AgencyMast.query.all()
+    if request.form:
+        al_id = int(request.form.get('al_id'))
+        log_item = AgencyLog.query.get(al_id)
+        db.session.delete(log_item)
+        db.session.commit()
+        return redirect(url_for('agencyapp.report_agency'))
     return render_template('report-agency.html', log=log,
                             locations=locations, agency_mast=agency_mast)
 
@@ -230,3 +222,17 @@ def loc_agency():
         loc = Location.query.get(loc_id)
         logs = loc.log
         return render_template('')
+
+@agencyapp.route('/agencytools', methods=['GET', 'POST'])
+def tools_agency():
+    today = datetime.now().date()
+    log = AgencyLog.query.filter_by(date=today).all()
+    tools = ToolLog.query.all()
+    if request.form:
+        agency_log_id = int(request.form.get('tool_logid'))
+        tool = request.form.get('tool_text')
+
+        a_log = AgencyLog.query.get(agency_log_id)
+        a_log.add_tool(tool_name=tool)
+        return redirect(url_for('agencyapp.tools_agency'))
+    return render_template('agency-tools.html', log=log, tools=tools)

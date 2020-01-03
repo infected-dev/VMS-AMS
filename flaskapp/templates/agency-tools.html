@@ -3,14 +3,14 @@
 
 <!--Page Title Block-->
 {% block pagetitle %}
-Agency Logging
+Agency Tools Log
 {% endblock %}
 <!-- End of Page Title BLock-->
 
 
 <!--Title Block-->
 {% block title %}
-Agency Logging
+Agency Tools Logging
 {% endblock %}
 <!--End of Title Block-->
 
@@ -23,7 +23,7 @@ Agency Logging
                 <h5 class="card-header">Agency Tool Data</h5>
                 <div class="card-body">
                        <div class="form-row">
-                           <form action="{{url_for('agencyapp.agency_tools')}}" method="POST" class=" justify-content-end">
+                           <form action="{{url_for('agencyapp.tools_agency')}}" method="POST" class=" justify-content-end">
                                 <label for="date">Select Date:</label>
                                 <div class=" form-inline">
                                     <input id="date" type="date" class="form-control" name="date">
@@ -51,8 +51,7 @@ Agency Logging
                                 <th>Supervisor</th>
                                 <th>Location</th>
                                 
-                                <th>In Time</th>
-                                <th>Out Time</th>
+                                
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,45 +59,71 @@ Agency Logging
                             {% for l in log %}  
                             <tr id="data{{l.al_id}}">
                                 <td></td>
-                                <td>{{l.order}}</td>
-                                <td>{{l.agenm.agency_name}} </td>
+                                <td id="order_no{{l.al_id}}">{{l.order}}</td>
+                                <td id="agency{{l.al_id}}">{{l.agenm.agency_name}} </td>
                                 <td>{{l.wtyp.work_type}}</td>
                                 <td>{{l.contact_person}}+ {{l.manpower}}</td>
                                 <td>{{l.superm.supervisor_name}}</td>
                                 <td>{{l.locationm.location_name}}</td>
-                                <td>{{l.in_time}}</td>
-                                <td>{{l.out_time}}</td>
-                                <td><button id="toolbtn{{l.al_id}}" data-toggle="modal" data-target="#toolmodal" class="toolbtn btn btn-sm btn-warning" attributes="{{l.al_id}}">Add Tool</button></td>
+                                
+                                <td><button data-id="{{l.al_id}}" data-toggle="modal" data-target="#toolmodal" class="toolbtn btn btn-sm btn-warning" attributes="{{l.al_id}}">Add Tool</button></td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+
+                    <!--Tool Modals-->
                     <div class="modal" tabindex="-1" role="dialog" id="toolmodal">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
                               <h5 class="modal-title">Add Tools</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">&times;</span> 
                               </button>
                             </div>
                             <div class="modal-body">
-                             <form>
-                                 <div class="form-group">
-                                     <input id="hiddentool" type="hidden" value="">
-                                    <label>Add Tools</label>
-                                    <input id="tooltext" type="text">
+                             
+                                 <div class="form-group m-1 p-1">
+                                    <div class="form-inline">
+                                        <input id="tool_order" type="text" class="form-control">
+                                        <input id="tool_agencyname" type="text" class="form-control">
+                                        
+                                    </div>
+                                    <form action="" method="POST">
+                                        <div class="form-group mt-2">
+                                            <label>Add Tools</label>
+                                            <input id="tool_logid" type="hidden" name="tool_logid">
+                                            <input id="tooltext" type="text" name="tool_text">
+                                            <input type="submit" value="Add Tool" class="btn btn-primary btn-sm">
+                                        </div>
+                                    </form>
+                                    
+                                    
                                     
                                  </div>
-                             </form>
+                             
+                             <table class="table table-condensed">
+                                 <thead>
+                                     <tr>
+                                         <th>#</th>
+                                         <th>Tool Name</th>
+                                         <th>Action</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                   
+                                 </tbody>
+                             </table>
                             </div>
                             <div class="modal-footer">
-                              <button id="toolmodalbtn" type="button" class="btn btn-primary">Save changes</button>
+                              
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                           </div>
                         </div>
                       </div>
+
                 </div>
             </div>
         </div>
@@ -109,24 +134,15 @@ Agency Logging
 
 {% block script %}
 <script>
-    $(document).ready(function(){
-        $('.toolbtn').on('click', function(){
-            var id = $(this).attr('attributes');
-            $('#hiddentool').val(id)
+   $('#toolmodal').on('show.bs.modal', function(e){
+       var id = $(e.relatedTarget).data('id')
+       var order_no = $('#order_no'+id).html()
+       var agency_name = $('#agency'+id).html()
 
-        });
-
-        $('#toolmodalbtn').on('click', function(){
-            var id = $('#hiddentool').val()
-            var text = $('#tooltext').val()
-            req = $.ajax({
-                url: '/UpdateTools',
-                type : 'POST',
-                data : {log_id:id, tool_text:text}
-            });
-        });
-       
-    });
+       $('#tool_order').val(order_no)
+       $('#tool_agencyname').val(agency_name)
+       $('#tool_logid').val(id)
+   })
 </script>
 
 

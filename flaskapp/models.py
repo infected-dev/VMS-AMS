@@ -2,6 +2,21 @@ from . import db
 from flask_login import UserMixin
 from flaskapp import app
 
+
+class ToolLog(db.Model):
+    __bind_key__ = 'agency'
+    __tablename__ = 'toollog'
+
+    tool_logid = db.Column(db.Integer, primary_key=True)
+    tool_name = db.Column(db.String(50))
+    agency_log_id = db.Column(db.Integer, db.ForeignKey('agencylog.al_id'))
+
+    def __init__(self, tool_name, agency_log_id):
+        self.tool_name = tool_name
+        self.agency_log_id = agency_log_id
+
+
+
 class Location(db.Model):
     __bind_key__ = 'agency'
     __tablename__ = 'location'
@@ -54,7 +69,6 @@ class Supervisor(db.Model):
         db.session.commit()
         
 
-
 class AgencyMast(db.Model):
     __bind_key__ = 'agency'
     __tablename__ = 'agencymast'
@@ -105,43 +119,6 @@ class WorkType(db.Model):
         db.session.delete(wtyp) 
         db.session.commit()
 
-class ToolMast(db.Model):
-    __bind_key__ = 'agency'
-    __tablename__ = 'toolmast'
-
-    tool_id = db.Column(db.Integer, primary_key=True)
-    tool_name = db.Column(db.String(30), unique=True)
-    logs = db.relationship('Tool_log', backref='tool', lazy=True)
-
-    def __init__(self, tool_name):
-        self.tool_name = tool_name
-
-    def checktool_add(tool_name):
-        var = ToolMast.query.filter_by(tool_name=tool_name).first()
-        if var:
-            return {'status':'already exists'}
-        else:
-            var = ToolMast(tool_name=tool_name)
-            db.session.add(var)
-            db.session.commit()
-            return {'status':'ok'}
-
-
-    def addtool(self, agency_id):
-        toolog = Tool_log(tool_id=self.tool_id, agency_log=agency_id)
-        db.session.add(toolog)
-        db.session.commit()
-
-
-class Tool_log(db.Model):
-    __bind_key__ = 'agency'
-    __tablename__ = 'tool_log'
-
-    toolog_id = db.Column(db.Integer, primary_key=True)
-    tool_id = db.Column(db.Integer, db.ForeignKey('toolmast.tool_id'))
-    agency_log = db.Column(db.Integer, db.ForeignKey('agencylog.al_id'))
-
-
 
 class AgencyLog(db.Model):
     __bind_key__ = 'agency'
@@ -161,8 +138,8 @@ class AgencyLog(db.Model):
     remarks = db.Column(db.Integer)
     Supervisor_id = db.Column(db.Integer, db.ForeignKey('supervisor.sid'))
     location_id = db.Column(db.Integer, db.ForeignKey('location.lid'))
-    tools = db.relationship('Tool_log', backref='tools', lazy=True)
-
+    tools = db.relationship('ToolLog', backref='tool', lazy=True)
+   
     def __init__(self, order, agency_id, worktype_id, contact_person, manpower, date, in_time, vehicle_no, remarks, Supervisor_id, location_id):
         self.order = order
         self.agency_id = agency_id
@@ -175,6 +152,11 @@ class AgencyLog(db.Model):
         self.remarks = remarks
         self.Supervisor_id = Supervisor_id
         self.location_id = location_id
+
+    def add_tool(self, tool_name):
+        tool = ToolLog(tool_name=tool_name, agency_log_id=self.al_id)
+        db.session.add(tool)
+        db.session.commit()
 
     
 
