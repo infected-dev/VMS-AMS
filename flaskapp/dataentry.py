@@ -77,6 +77,7 @@ def update_vehicle():
         duration = vehicle.TotalDuration
         outtime = datetime.strptime(
                 request.form['outtime'], '%H:%M').time()
+       
         vehicle.OutTime = outtime
         db.session.commit()
         if duration == None or 'none':
@@ -153,7 +154,7 @@ def post_format():
     employees = Employee.query.all()
     types = VehicleTypes.query.all()
     visitors = Visitor.query.all()
-    return render_template('dataentry-visitors.html', today_time=today_time, 
+    return render_template('Dataentry/dataentry-visitors.html', today_time=today_time, 
         today_date=today_date, types=types, employees=employees, 
         today_visitors=today_visitors, visitors=visitors)
 
@@ -166,7 +167,7 @@ def post_vehicles():
     today_vehicles = Vehicle.query.filter_by(VeEntryDate=yesterday).all()
     types = VehicleTypes.query.all()
     departments = Department.query.all()
-    return render_template('dataentry-vehicle.html',departments=departments, today_vehicles=today_vehicles,today_date=yesterday,today_time=today_time, types=types)
+    return render_template('Dataentry/dataentry-vehicle.html',departments=departments, today_vehicles=today_vehicles,today_date=yesterday,today_time=today_time, types=types)
 
 
 #Main Page Render Function for Mill Vehicle DataEntry
@@ -178,7 +179,7 @@ def post_mill():
     comp_vehicles = CompanyVehicle.query.all()  
     comp_vehicles_today = CompanyTimesheet.query.filter_by(date=yesterday).all()
     departments = Department.query.all()
-    return render_template('dataentry-mill.html',departments=departments, today_date=yesterday, today_time=today_time, comp_vehicles=comp_vehicles, comp_vehicles_today=comp_vehicles_today)
+    return render_template('Dataentry/dataentry-mill.html',departments=departments, today_date=yesterday, today_time=today_time, comp_vehicles=comp_vehicles, comp_vehicles_today=comp_vehicles_today)
 
 
 #New Visitor DataEntry Function

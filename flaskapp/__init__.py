@@ -13,7 +13,7 @@ login_manager = LoginManager()
 
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 
 app.config['SECRET_KEY'] = 'laxmikapatihume'

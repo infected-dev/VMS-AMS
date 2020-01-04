@@ -40,7 +40,7 @@ def dashboard():
         count = Timesheet_Visitor.query.filter_by(date=i).count()
         total_count.append([i.strftime("%x"), count])
     
-    return render_template('dashboard-visitors.html',legend=legend, total_count=total_count, 
+    return render_template('Dataentry/dashboard-visitors.html',legend=legend, total_count=total_count, 
         query_visitors_all=query_visitors_all, query_visitors_today=query_visitors_today, dept_count=dept_count, lessthan_dept_count=lessthan_dept_count)
 
 
@@ -59,7 +59,7 @@ def dashboard_vehicle():
         total_count.append([i.strftime("%d/%m/%Y"), count])
 
 
-    return render_template('dashboard-vehicles.html',legend=legend, total_count=total_count, query_vehicles_all=query_vehicles_all, 
+    return render_template('Dataentry/dashboard-vehicles.html',legend=legend, total_count=total_count, query_vehicles_all=query_vehicles_all, 
         query_vehicles_today=query_vehicles_today)
 
 
@@ -72,7 +72,7 @@ def report_main():
     date = yesterday
     visitors = Timesheet_Visitor.query.all()
     vehicles = Vehicle.query.all()
-    return render_template('report-visitors.html',departments=departments, date=date.strftime('%d-%b-%Y')
+    return render_template('Reports/report-visitors.html',departments=departments, date=date.strftime('%d-%b-%Y')
     , visitors=visitors, vehicles=vehicles, error=error)
 
 
@@ -80,7 +80,7 @@ def report_main():
 def report_vehicles():
     depts = Department.query.all()
     query_vehicles_outside = Vehicle.query.all()
-    return render_template('report-vehicles.html',query_vehicles_outside=query_vehicles_outside, 
+    return render_template('Reports/report-vehicles.html',query_vehicles_outside=query_vehicles_outside, 
        depts=depts)
 
 
@@ -92,13 +92,13 @@ def mill_report():
         comp_veh_id = request.args['comp_vehicle']
         comp_vehicle = CompanyVehicle.query.get(comp_veh_id)
         timesheet= comp_vehicle.timesheet   
-        return render_template('report-mill.html',timesheet=timesheet,query_comp_vehicles=query_comp_vehicles,
+        return render_template('Reports/report-mill.html',timesheet=timesheet,query_comp_vehicles=query_comp_vehicles,
         query_vehicles_mill=query_vehicles_mill,
        )
     depts = Department.query.all()
     query_vehicles_mill = CompanyTimesheet.query.all()
     query_comp_vehicles = CompanyVehicle.query.all()
-    return render_template('report-mill.html',depts=depts, query_comp_vehicles=query_comp_vehicles, 
+    return render_template('Reports/report-mill.html',depts=depts, query_comp_vehicles=query_comp_vehicles, 
         query_vehicles_mill=query_vehicles_mill)
 
 
@@ -119,31 +119,31 @@ def report_print():
                     a = i.extras
                     count_extra = count_extra + a
 
-            return render_template('report-visitors-print.html',count=count, query=query, date=date, title=title, count_extra=count_extra)
+            return render_template('Reports/report-visitors-print.html',count=count, query=query, date=date, title=title, count_extra=count_extra)
         elif print_id == '2':
             title = 'Outside Vehicle Records'
             query = Vehicle.query.filter_by(VeEntryDate=date).all()
             count = len(query)
-            return render_template('report-vehicles-print.html',  query=query,count=count, title=title, date=date)
+            return render_template('Reports/report-vehicles-print.html',  query=query,count=count, title=title, date=date)
         elif print_id == '22':
             dept_check = request.form.get('deptcheck')
             if dept_check:
                  title = 'Outside Vehicle Record Sorted by Dept'
                  query = Vehicle.query.filter_by(VeEntryDate=date).all()
                  count = len(query)
-                 return render_template('report-vehicles-print.html', query=query,count=count, title=title, date=date)
+                 return render_template('Reports/report-vehicles-print.html', query=query,count=count, title=title, date=date)
             else:
                 title = 'Outside Vehicle Records by Department'
                 dept_id = int(request.form.get('deptselect'))
                 query = Vehicle.query.filter(Vehicle.VeEntryDate == date, Vehicle.visited_department == dept_id).all()
                 count = len(query)
                 department = Department.query.get(dept_id)
-                return render_template('report-vehicles-print.html', query=query,count=count, title=title, date=date, department=department)
+                return render_template('Reports/report-vehicles-print.html', query=query,count=count, title=title, date=date, department=department)
         elif print_id == '3':
             title = 'Mill Vehicle Records'
             query = CompanyTimesheet.query.filter_by(date=date).all()
             count = len(query)
-            return render_template('report-vehicles-print.html', query=query, title=title,count=count, date=date)
+            return render_template('Reports/report-vehicles-print.html', query=query, title=title,count=count, date=date)
         elif print_id == '8':
             title = 'Visitor Records Sorted by Employee Visited'
             query = Timesheet_Visitor.query.filter_by(date=date).all()
@@ -153,13 +153,13 @@ def report_print():
                 if i.extras is not None :
                     a = i.extras
                     count_extra = count_extra + a
-            return render_template('report-visitors-print.html',count=count, query=query, date=date, title=title, count_extra=count_extra)
+            return render_template('Reports/report-visitors-print.html',count=count, query=query, date=date, title=title, count_extra=count_extra)
         elif print_id == '10':
             title = 'Visitor Records Sorted By Department'
             query = Timesheet_Visitor.query.filter_by(date=date).all()
             count = len(query)
             
-            return render_template('report-visitors-print.html',count=count, query=query, date=date, title=title)
+            return render_template('Reports/report-visitors-print.html',count=count, query=query, date=date, title=title)
         elif print_id == '9': 
             dept_check = request.form.get('deptcheck')
             if dept_check:
@@ -167,7 +167,7 @@ def report_print():
                 query = Timesheet_Visitor.query.filter_by(date=date).all()
                 count = len(query)
                 
-                return render_template('report-visitors-print.html',count=count, query=query, date=date, title=title)
+                return render_template('Reports/report-visitors-print.html',count=count, query=query, date=date, title=title)
             else:
                 department_id = int(request.form.get('department'))
                 department = Department.query.get(department_id)
@@ -180,7 +180,7 @@ def report_print():
                         filtered_list.append(i)
                 title = 'Visitors Records by Department'
                 count = len(filtered_list)
-                return render_template('report-visitors-print.html',department=department, title=title, count=count, 
+                return render_template('Reports/report-visitors-print.html',department=department, title=title, count=count, 
                     filtered_list=filtered_list, date=date)
         elif print_id=='13':
              title = 'Consolidated Visitor Report'
@@ -192,7 +192,7 @@ def report_print():
              for i in query:
                  if i.extras:
                      count_extra += i.extras
-             return render_template('report-visitors-print.html', title=title, count=count, count_extra=count_extra, 
+             return render_template('Reports/report-visitors-print.html', title=title, count=count, count_extra=count_extra, 
                                     date=date, date_2=date_2, query=query)
 
 
@@ -215,7 +215,7 @@ def frequent_visitor():
         if len(i.a_timesheet) >= 2:
             freq.append([i.id,i.name,i.place_from,len(i.a_timesheet)])
 
-    return render_template('report-visitor-freq.html', freq=freq)
+    return render_template('Reports/report-visitor-freq.html', freq=freq)
 
 @report.route('/departmentVisitors', methods=['GET','POST'])
 def department_visitors():
@@ -235,7 +235,7 @@ def department_visitors():
     count = len(timelog)
 
     
-    return render_template('report-visitor-dept.html', department=department, timelog=timelog, count=count, dept_name=dept_name)
+    return render_template('Reports/report-visitor-dept.html', department=department, timelog=timelog, count=count, dept_name=dept_name)
 
 @report.route('/employeeVisitors', methods=['GET', 'POST'])
 def employee_visitors():
@@ -256,7 +256,7 @@ def employee_visitors():
                 timelog.append(i)
                 
     count = (len(timelog))
-    return render_template('report-visitor-employee.html', employees=employees, dept_name=dept_name, timelog=timelog, emp_name=emp_name, count=count)
+    return render_template('Reports/report-visitor-employee.html', employees=employees, dept_name=dept_name, timelog=timelog, emp_name=emp_name, count=count)
 
 @report.route('/vendorVisitor', methods=['GET', 'POST'])
 def vendor_visitor():
@@ -290,7 +290,7 @@ def dept_outsidevehicle():
         dept_name = department.department_name
         timelog = department.outside_vehicles
     count = len(timelog)
-    return render_template('report-vehicle-outside-dept.html', dept_name=dept_name, timelog=timelog, ref_depts=ref_depts, count=count)
+    return render_template('Reports/report-vehicle-outside-dept.html', dept_name=dept_name, timelog=timelog, ref_depts=ref_depts, count=count)
 
 @report.route('/vendorOutsideVehicle', methods=['GET', 'POST'])
 def vendor_outsidevehicle():
@@ -304,4 +304,4 @@ def vendor_outsidevehicle():
             if i.VendorName == vendor_name:
                 req_log.append(i)
     count = len(req_log)
-    return render_template('report-vehicle-outside-vendor.html', vendors=vendors, req_log=req_log, vendor_name=vendor_name, count=count)
+    return render_template('Reports/report-vehicle-outside-vendor.html', vendors=vendors, req_log=req_log, vendor_name=vendor_name, count=count)

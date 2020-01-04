@@ -17,7 +17,7 @@ def agency_main():
     worktypes = WorkType.query.all()
     agencies = AgencyMast.query.all()
     locations = Location.query.all()
-    return render_template('agency.html', log=log, supervisors=supervisors,
+    return render_template('Agency/agency.html', log=log, supervisors=supervisors,
                             worktypes=worktypes, agencies=agencies, 
                             locations=locations, date=date, time=time)
 
@@ -133,7 +133,7 @@ def report_agency():
         db.session.delete(log_item)
         db.session.commit()
         return redirect(url_for('agencyapp.report_agency'))
-    return render_template('report-agency.html', log=log,
+    return render_template('Reports/report-agency.html', log=log,
                             locations=locations, agency_mast=agency_mast)
 
 
@@ -157,7 +157,7 @@ def print_agency_report():
                     a = i.manpower
                     extras+=a
 
-            return render_template('agency-report-print.html', logs=logs, title=title,
+            return render_template('Reports/agency-report-print.html', logs=logs, title=title,
                                     date=date, count=count, extras=extras)
         elif printid == 2:
             check = request.form.get('deptcheck')
@@ -180,7 +180,7 @@ def print_agency_report():
                 if i.manpower:
                     a = i.manpower
                     extras+=a
-            return render_template('agency-report-print.html', logs=logs, title=title,
+            return render_template('Reports/agency-report-print.html', logs=logs, title=title,
                                     date=date, count=count, extras=extras)
         elif printid == 3:
             agency_id = request.form.get('agency_name')
@@ -195,7 +195,7 @@ def print_agency_report():
                     if i.manpower:
                         extras += i.manpower
                 title = 'Agency Report'
-                return render_template('agency-report-print.html', logs=logs, title=title,
+                return render_template('Reports/agency-report-print.html', logs=logs, title=title,
                                         count=count, extras=extras)
 
 
@@ -211,7 +211,7 @@ def freq_visitor():
     for i in agency_all:
         a = len(i.log)
         log.append([i.agency_name,a])
-    return render_template('report-agency-freq.html', log=log) 
+    return render_template('Reports/report-agency-freq.html', log=log) 
 
 @agencyapp.route('/LocationAgency')
 def loc_agency():
@@ -235,4 +235,47 @@ def tools_agency():
         a_log = AgencyLog.query.get(agency_log_id)
         a_log.add_tool(tool_name=tool)
         return redirect(url_for('agencyapp.tools_agency'))
-    return render_template('agency-tools.html', log=log, tools=tools)
+    return render_template('Agency/agency-tools.html', log=log, tools=tools)
+
+@agencyapp.route('/editagency', methods=['GET', 'POST'])
+def edit_agency():
+    date = request.form.get('selected_date')
+    if date:
+        date = datetime.strptime(date, '%Y-%M-%d').date()
+    log = AgencyLog.query.filter_by(date=date).all()
+    return render_template('Agency/edit-agency.html', log=log, date=date)
+
+@agencyapp.route('/changedata', methods=['POST'])
+def chnage_data():
+    if request.form:
+        log_id = request.form['logid']
+        orderno = request.form['order']
+        name = request.form['name']
+        workers = request.form['workers']
+        in_time = request.form['in_time']
+        out_time = request.form['out_time']
+
+        if log_id:
+            log_id = int(log_id)
+            log_item = AgencyLog.query.get(log_id)
+
+        if in_time:
+            in_time = datetime.strptime(in_time, '%H:%M').time()
+            log_item.in_time = in_time
+            db.session.commit()
+
+        if out_time:
+            out_time = datetime.strptime(out_time, '%H:%M').time()
+            log_item.out_time = out_time
+            db.session.commit() 
+        if workers:
+            workers = int(workers)
+            log_item.manpower = workers
+            db.session.commit()
+        
+        if name:
+            log_item.name = name
+            db.session.commit()
+        print(f'{orderno}, {name}, {workers}, {in_time}, {out_time}')
+    return {'status':'okay'}
+

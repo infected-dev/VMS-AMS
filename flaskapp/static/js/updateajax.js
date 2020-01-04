@@ -79,12 +79,12 @@ $(document).ready(function(){
         var id = $(this).attr('attributes');
     
        var out_time = $('#outtime'+id).val()
-    
+        var in_time = $('#intime'+id).val()
        //alert(out_time);
        req = $.ajax({
         url : '/vehicles/update',
         type : 'POST',
-        data : {VeID : id , outtime:out_time}
+        data : {VeID : id ,intime:in_time, outtime:out_time}
         });
 
         $('#datasectionveh'+id).fadeOut(1000).fadeIn(1000);

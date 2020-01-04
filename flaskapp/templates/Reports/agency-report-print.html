@@ -83,7 +83,7 @@
                                 </thead>
                                 
                                 <tbody>
-                                    {% for q in logs %}
+                                    {% for q in logs | sort(attribute='in_time') %}
                                      <tr>
                                             <td></td>
                                             <td>{{q.order}}</td>

@@ -17,7 +17,7 @@ def edit_visitor():
         selected_date = request.form.get('selected_date')
         date = datetime.strptime(selected_date, '%Y-%m-%d').date()
         backdate_visitors = Timesheet_Visitor.query.filter_by(date=date).all()
-    return render_template('edit-Visitor.html', backdate_visitors=backdate_visitors,emps=emps)
+    return render_template('Edits/edit-Visitor.html', backdate_visitors=backdate_visitors,emps=emps)
 
 
 #Editing department route for visitor
@@ -47,7 +47,7 @@ def edit_outsideVehicle():
         selected_date = request.form.get('selected_date')
         date = datetime.strptime(selected_date, '%Y-%m-%d').date()
         backdate_vehicles = Vehicle.query.filter_by(VeEntryDate=date).all()
-    return render_template('edit-outsideVehicle.html',  backdate_vehicles=backdate_vehicles)
+    return render_template('Edits/edit-outsideVehicle.html',  backdate_vehicles=backdate_vehicles)
 
 
 #Main Page Render for Mill Vehicles
@@ -58,7 +58,7 @@ def edit_millVehicle():
         selected_date = request.form.get('selected_date')
         date = datetime.strptime(selected_date, '%Y-%m-%d').date()
         backdate_mill = CompanyTimesheet.query.filter_by(date=date).all()
-    return render_template('edit-millVehicle.html',backdate_mill=backdate_mill)
+    return render_template('Edits/edit-millVehicle.html',backdate_mill=backdate_mill)
 
 @edit.route('/editVisitorMaster', methods=['POST'])
 def edit_visitorMaster():

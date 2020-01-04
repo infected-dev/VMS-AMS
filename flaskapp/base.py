@@ -8,7 +8,7 @@ base = Blueprint('base', __name__)
 @base.route('/')
 def index():
     users = User.query.all()
-    return render_template('signin.html', users=users) 
+    return render_template('Base/signin.html', users=users) 
 
 
     

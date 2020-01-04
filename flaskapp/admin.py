@@ -21,7 +21,7 @@ def admin_main():
     locations = Location.query.all()
     supervisors = Supervisor.query.all()
     worktypes = WorkType.query.all()
-    return render_template('admin.html',visitors=visitors,
+    return render_template('Base/admin.html',visitors=visitors,
         company_vehicles=company_vehicles, vehicle_types=vehicle_types, 
         departments=departments, employees=employees, users=users, agencys=agencys, 
         locations=locations, worktypes=worktypes, supervisors=supervisors)

@@ -144,6 +144,7 @@ Agency Report
                     <thead class=" thead-dark">
                         <tr class="">
                             <th>Entry date</th>
+                            <th>Order No</th>
                             <th>Agency Name</th>
                             <th>Contact Person</th>
                             <th>Work Type</th>
@@ -165,7 +166,7 @@ Agency Report
 
                             <td>{{l.date.strftime('%d-%m-%Y')}}</td>
 
-
+                            <td>{{l.order}}</td>
 
 
                             <td>{{l.agenm.agency_name.title()}}</td>
