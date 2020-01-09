@@ -40,7 +40,7 @@ def dashboard():
         count = Timesheet_Visitor.query.filter_by(date=i).count()
         total_count.append([i.strftime("%x"), count])
     
-    return render_template('Dataentry/dashboard-visitors.html',legend=legend, total_count=total_count, 
+    return render_template('Dashboards/dashboard-visitors.html',legend=legend, total_count=total_count, 
         query_visitors_all=query_visitors_all, query_visitors_today=query_visitors_today, dept_count=dept_count, lessthan_dept_count=lessthan_dept_count)
 
 
@@ -59,7 +59,7 @@ def dashboard_vehicle():
         total_count.append([i.strftime("%d/%m/%Y"), count])
 
 
-    return render_template('Dataentry/dashboard-vehicles.html',legend=legend, total_count=total_count, query_vehicles_all=query_vehicles_all, 
+    return render_template('Dashboards/dashboard-vehicles.html',legend=legend, total_count=total_count, query_vehicles_all=query_vehicles_all, 
         query_vehicles_today=query_vehicles_today)
 
 

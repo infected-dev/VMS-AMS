@@ -276,6 +276,11 @@ def chnage_data():
         if name:
             log_item.name = name
             db.session.commit()
+        
+        if orderno:
+            log_item.order = orderno
+            db.session.commit()
+            
         print(f'{orderno}, {name}, {workers}, {in_time}, {out_time}')
     return {'status':'okay'}
 
